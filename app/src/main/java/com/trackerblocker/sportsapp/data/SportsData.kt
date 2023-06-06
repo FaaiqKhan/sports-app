@@ -1,5 +1,8 @@
 package com.trackerblocker.sportsapp.data
 
+import com.trackerblocker.sportsapp.R
+import com.trackerblocker.sportsapp.model.Sport
+
 object SportsData {
 
     val defaultSport = getSportsData()[0]
