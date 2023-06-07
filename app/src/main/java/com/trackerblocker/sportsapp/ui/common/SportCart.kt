@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.trackerblocker.sportsapp.R
 import com.trackerblocker.sportsapp.data.SportsData
 import com.trackerblocker.sportsapp.model.Sport
+import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -29,7 +30,7 @@ fun SportCart(sport: Sport, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .size(dimensionResource(id = R.dimen.card_image_height))
         ) {
-            SportCardImage(image = sport.imageResourceId)
+            SportCardImage(sport = sport)
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -55,11 +56,14 @@ fun SportCart(sport: Sport, modifier: Modifier = Modifier) {
                             count = sport.playerCount,
                             sport.playerCount
                         ),
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.displaySmall,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     if (sport.olympic) {
-                        Text(text = stringResource(id = R.string.olympic_caption))
+                        Text(
+                            text = stringResource(id = R.string.olympic_caption),
+                            style = MaterialTheme.typography.displaySmall
+                        )
                     }
                 }
             }
@@ -72,7 +76,7 @@ fun SportCart(sport: Sport, modifier: Modifier = Modifier) {
 @Composable
 fun SportCartPreview() {
     val sport = SportsData.defaultSport
-    MaterialTheme {
+    SportsAppTheme {
         SportCart(sport = sport)
     }
 }
