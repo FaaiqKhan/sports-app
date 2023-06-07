@@ -1,7 +1,10 @@
 package com.trackerblocker.sportsapp.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +20,7 @@ import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
 
 @Composable
 fun SportDetails(sport: Sport, modifier: Modifier = Modifier) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = modifier
     ) {
@@ -25,9 +29,9 @@ fun SportDetails(sport: Sport, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(id = sport.sportDetails),
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(
-                horizontal = dimensionResource(id = R.dimen.padding_detail_content_horizontal)
-            )
+            modifier = Modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_detail_content_horizontal))
+                .verticalScroll(scrollState)
         )
     }
 }
