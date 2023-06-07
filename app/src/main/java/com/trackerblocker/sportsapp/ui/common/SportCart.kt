@@ -15,15 +15,16 @@ import com.trackerblocker.sportsapp.data.SportsData
 import com.trackerblocker.sportsapp.model.Sport
 import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SportCart(sport: Sport, modifier: Modifier = Modifier) {
+fun SportCart(sport: Sport, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(
             defaultElevation = dimensionResource(id = R.dimen.card_elevation)
         ),
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.card_corner_radius))
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.card_corner_radius)),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -77,6 +78,6 @@ fun SportCart(sport: Sport, modifier: Modifier = Modifier) {
 fun SportCartPreview() {
     val sport = SportsData.defaultSport
     SportsAppTheme {
-        SportCart(sport = sport)
+        SportCart(sport = sport, onClick = {})
     }
 }
