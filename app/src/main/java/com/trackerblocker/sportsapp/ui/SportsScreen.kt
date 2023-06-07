@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.trackerblocker.sportsapp.data.SportsData
@@ -23,19 +23,20 @@ enum class SportsScreens(@StringRes val title: Int) {
 }
 
 @Composable
-fun SportsScreen(onClick: () -> Unit) {
+fun SportsScreen(onClick: (Int) -> Unit) {
     SportsList(
         sports = SportsData.getSportsData(),
         modifier = Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             .padding(top = dimensionResource(id = R.dimen.padding_small)),
-        onClick = onClick
+        onClick = { onClick(it) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SportsApp(
+    viewModel: SportViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
 
@@ -54,16 +55,25 @@ fun SportsApp(
             )
         }
     ) { innerPadding ->
+
+        val uiState by viewModel.uiState.collectAsState()
+
         NavHost(
             navController = navController,
             startDestination = SportsScreens.START.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = SportsScreens.START.name) {
-                SportsScreen(onClick = { navController.navigate(SportsScreens.DETAILS.name) })
+                SportsScreen(
+                    onClick = { sportId ->
+                        val sport = SportsData.getSportsData().find { it.id == sportId }
+                        viewModel.setSport(sport!!)
+                        navController.navigate(SportsScreens.DETAILS.name)
+                    }
+                )
             }
             composable(route = SportsScreens.DETAILS.name) {
-                SportDetails(sport = SportsData.defaultSport)
+                SportDetails(uiState = uiState)
             }
         }
     }

@@ -16,14 +16,19 @@ import com.trackerblocker.sportsapp.ui.common.SportCart
 import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
 
 @Composable
-fun SportsList(sports: List<Sport>, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun SportsList(sports: List<Sport>, modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(
             space = dimensionResource(id = R.dimen.padding_small)
         )
     ) {
-        items(count = sports.size) { index -> SportCart(sport = sports[index], onClick = onClick) }
+        items(count = sports.size) { index ->
+            SportCart(
+                sport = sports[index],
+                onClick = { onClick(it) }
+            )
+        }
     }
 }
 

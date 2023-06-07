@@ -17,14 +17,14 @@ import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SportCart(sport: Sport, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SportCart(sport: Sport, onClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(
             defaultElevation = dimensionResource(id = R.dimen.card_elevation)
         ),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.card_corner_radius)),
-        onClick = onClick
+        onClick = { onClick(sport.id) }
     ) {
         Row(
             modifier = Modifier
