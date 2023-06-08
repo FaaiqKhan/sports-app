@@ -13,28 +13,40 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.*
 import com.trackerblocker.sportsapp.R
 import com.trackerblocker.sportsapp.model.Sport
+import com.trackerblocker.sportsapp.utils.UiUtils
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SportCardImage(sport: Sport, modifier: Modifier = Modifier, showContent: Boolean = false) {
+fun SportCardImage(
+    sport: Sport,
+    modifier: Modifier = Modifier,
+    showContent: Boolean = false,
+    contentType: UiUtils.SportContentType = UiUtils.SportContentType.LIST_ONLY
+) {
     val imageResourceId = if (showContent) sport.sportsImageBanner else sport.imageResourceId
     val contentScale = if (showContent) ContentScale.FillWidth else ContentScale.Fit
+    val imageHeight = if (contentType == UiUtils.SportContentType.LIST_ONLY) {
+        dimensionResource(id = R.dimen.card_image_height)
+    } else {
+        dimensionResource(id = R.dimen.card_image_height_details)
+    }
+    val shadowEndY = if (contentType == UiUtils.SportContentType.LIST_ONLY) 350f else 650f
     Box(modifier = modifier) {
         Image(
             painter = painterResource(id = imageResourceId),
             contentDescription = null,
             contentScale = contentScale,
-            modifier = modifier.height(dimensionResource(id = R.dimen.card_image_height)),
+            modifier = modifier.height(imageHeight),
         )
         if (showContent) {
             Column(
                 modifier = Modifier
-                    .height(dimensionResource(id = R.dimen.card_image_height))
+                    .height(imageHeight)
                     .background(
                         Brush.verticalGradient(
                             listOf(Color.Transparent, MaterialTheme.colorScheme.scrim),
-                            0f,
-                            350f
+                            startY = 0f,
+                            endY = shadowEndY
                         )
                     ),
                 verticalArrangement = Arrangement.Bottom,

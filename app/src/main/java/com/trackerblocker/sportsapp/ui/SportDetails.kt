@@ -1,7 +1,6 @@
 package com.trackerblocker.sportsapp.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,20 +14,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.trackerblocker.sportsapp.R
 import com.trackerblocker.sportsapp.data.SportUiState
 import com.trackerblocker.sportsapp.data.SportsData
-import com.trackerblocker.sportsapp.model.Sport
 import com.trackerblocker.sportsapp.ui.common.SportCardImage
 import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
+import com.trackerblocker.sportsapp.utils.UiUtils
 
 @Composable
-fun SportDetails(uiState: SportUiState, modifier: Modifier = Modifier) {
+fun SportDetails(
+    uiState: SportUiState,
+    modifier: Modifier = Modifier,
+    contentType: UiUtils.SportContentType
+) {
     val scrollState = rememberScrollState()
     Column(
         modifier = modifier
     ) {
-        SportCardImage(sport = uiState.sport, modifier = Modifier.fillMaxWidth(), showContent = true)
+        SportCardImage(
+            sport = uiState.selectedSport,
+            modifier = Modifier.fillMaxWidth(),
+            showContent = true,
+            contentType = contentType
+        )
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
         Text(
-            text = stringResource(id = uiState.sport.sportDetails),
+            text = stringResource(id = uiState.selectedSport.sportDetails),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(horizontal = dimensionResource(id = R.dimen.padding_detail_content_horizontal))
@@ -37,11 +45,17 @@ fun SportDetails(uiState: SportUiState, modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(name = "Light theme")
-@Preview(name = "Dark theme", uiMode = UI_MODE_NIGHT_YES)
+@Preview(name = "Light theme", showBackground = true)
+@Preview(name = "Dark theme", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun SportDetailsPreview() {
     SportsAppTheme {
-        SportDetails(uiState = SportUiState(SportsData.defaultSport))
+        SportDetails(
+            uiState = SportUiState(
+                sports = SportsData.getSportsData(),
+                selectedSport = SportsData.defaultSport
+            ),
+            contentType = UiUtils.SportContentType.LIST_ONLY
+        )
     }
 }

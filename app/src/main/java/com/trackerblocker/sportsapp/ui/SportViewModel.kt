@@ -6,12 +6,17 @@ import com.trackerblocker.sportsapp.data.SportsData
 import com.trackerblocker.sportsapp.model.Sport
 import kotlinx.coroutines.flow.*
 
-class SportViewModel: ViewModel() {
+class SportViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SportUiState(sport = SportsData.defaultSport))
+    private val _uiState = MutableStateFlow(
+        SportUiState(
+            sports = SportsData.getSportsData(),
+            selectedSport = SportsData.defaultSport
+        )
+    )
     val uiState: StateFlow<SportUiState> = _uiState.asStateFlow()
 
     fun setSport(sport: Sport) {
-        _uiState.update { currentState -> currentState.copy(sport = sport) }
+        _uiState.update { currentState -> currentState.copy(selectedSport = sport) }
     }
 }

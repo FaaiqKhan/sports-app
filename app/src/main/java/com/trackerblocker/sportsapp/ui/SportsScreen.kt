@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -15,36 +16,33 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.trackerblocker.sportsapp.data.SportsData
 import com.trackerblocker.sportsapp.R
+import com.trackerblocker.sportsapp.data.SportUiState
 import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
+import com.trackerblocker.sportsapp.utils.UiUtils
 
 enum class SportsScreens(@StringRes val title: Int) {
     START(title = R.string.list_fragment_label),
     DETAILS(title = R.string.detail_fragment_label)
 }
 
-@Composable
-fun SportsScreen(onClick: (Int) -> Unit) {
-    SportsList(
-        sports = SportsData.getSportsData(),
-        modifier = Modifier
-            .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-            .padding(top = dimensionResource(id = R.dimen.padding_small)),
-        onClick = { onClick(it) }
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SportsApp(
+    windowSize: WindowWidthSizeClass,
     viewModel: SportViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
 
     val backStackEntry by navController.currentBackStackEntryAsState()
-
     val currentScreen = SportsScreens.valueOf(
         value = backStackEntry?.destination?.route ?: SportsScreens.START.name
     )
+
+    val contentType = when (windowSize) {
+        WindowWidthSizeClass.Compact -> UiUtils.SportContentType.LIST_ONLY
+        WindowWidthSizeClass.Expanded -> UiUtils.SportContentType.LIST_AND_DETAILS
+        else -> UiUtils.SportContentType.LIST_ONLY
+    }
 
     Scaffold(
         topBar = {
@@ -65,17 +63,47 @@ fun SportsApp(
         ) {
             composable(route = SportsScreens.START.name) {
                 SportsScreen(
+                    uiState = uiState,
+                    contentType = contentType,
                     onClick = { sportId ->
                         val sport = SportsData.getSportsData().find { it.id == sportId }
                         viewModel.setSport(sport!!)
-                        navController.navigate(SportsScreens.DETAILS.name)
+                        if (contentType == UiUtils.SportContentType.LIST_ONLY) {
+                            navController.navigate(SportsScreens.DETAILS.name)
+                        }
                     }
                 )
             }
             composable(route = SportsScreens.DETAILS.name) {
-                SportDetails(uiState = uiState)
+                SportDetails(uiState = uiState, contentType = contentType)
             }
         }
+    }
+}
+
+@Composable
+fun SportsScreen(
+    uiState: SportUiState,
+    contentType: UiUtils.SportContentType,
+    onClick: (Int) -> Unit
+) {
+    if (contentType == UiUtils.SportContentType.LIST_ONLY) {
+        SportsList(
+            sports = SportsData.getSportsData(),
+            modifier = Modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                .padding(top = dimensionResource(id = R.dimen.padding_small)),
+            onClick = { onClick(it) }
+        )
+    } else {
+        SportsListAndDetails(
+            uiState = uiState,
+            modifier = Modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                .padding(top = dimensionResource(id = R.dimen.padding_small)),
+            onClick = { onClick(it) },
+            contentType = contentType
+        )
     }
 }
 
@@ -110,8 +138,11 @@ fun AppTopBar(
 @Composable
 private fun SportsScreenPreview() {
     SportsAppTheme {
-        SportsScreen {
-
-        }
+        SportsScreen(
+            uiState = SportUiState(
+                sports = SportsData.getSportsData(),
+                selectedSport = SportsData.defaultSport
+            ), contentType = UiUtils.SportContentType.LIST_ONLY
+        ) {}
     }
 }
