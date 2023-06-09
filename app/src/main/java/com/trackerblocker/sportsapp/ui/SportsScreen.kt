@@ -29,9 +29,10 @@ enum class SportsScreens(@StringRes val title: Int) {
 @Composable
 fun SportsApp(
     windowSize: WindowWidthSizeClass,
-    viewModel: SportViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
 ) {
+
+    val viewModel: SportViewModel = viewModel()
+    val navController: NavHostController = rememberNavController()
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = SportsScreens.valueOf(
@@ -39,8 +40,11 @@ fun SportsApp(
     )
 
     val contentType = when (windowSize) {
-        WindowWidthSizeClass.Compact -> UiUtils.SportContentType.LIST_ONLY
+        WindowWidthSizeClass.Compact,
+        WindowWidthSizeClass.Medium -> UiUtils.SportContentType.LIST_ONLY
+
         WindowWidthSizeClass.Expanded -> UiUtils.SportContentType.LIST_AND_DETAILS
+
         else -> UiUtils.SportContentType.LIST_ONLY
     }
 
