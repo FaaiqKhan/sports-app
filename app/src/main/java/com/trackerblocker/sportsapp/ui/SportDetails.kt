@@ -1,9 +1,8 @@
 package com.trackerblocker.sportsapp.ui
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,8 @@ fun SportDetails(
     val scrollState = rememberScrollState()
     Column(
         modifier = modifier
+            .background(color = MaterialTheme.colorScheme.surfaceVariant)
+            .fillMaxHeight()
     ) {
         SportCardImage(
             sport = uiState.selectedSport,
@@ -34,13 +35,16 @@ fun SportDetails(
             showContent = true,
             contentType = contentType
         )
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
         Text(
             text = stringResource(id = uiState.selectedSport.sportDetails),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.padding_detail_content_horizontal))
-                .verticalScroll(scrollState)
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_detail_content_horizontal),
+                    vertical = dimensionResource(id = R.dimen.padding_medium)
+                )
+                .verticalScroll(scrollState),
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }

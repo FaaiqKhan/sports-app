@@ -44,7 +44,10 @@ fun SportCardImage(
                     .height(imageHeight)
                     .background(
                         Brush.verticalGradient(
-                            listOf(Color.Transparent, MaterialTheme.colorScheme.scrim),
+                            listOf(
+                                Color.Transparent,
+                                MaterialTheme.colorScheme.onSecondaryContainer
+                            ),
                             startY = 0f,
                             endY = shadowEndY
                         )
