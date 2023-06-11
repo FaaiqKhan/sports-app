@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,12 +20,12 @@ import com.trackerblocker.sportsapp.ui.theme.SportsAppTheme
 @Composable
 fun SportCart(sport: Sport, onClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier,
+        modifier = modifier.testTag(sport.id.toString()),
         elevation = CardDefaults.cardElevation(
             defaultElevation = dimensionResource(id = R.dimen.card_elevation)
         ),
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.card_corner_radius)),
-        onClick = { onClick(sport.id) }
+        onClick = { onClick(sport.id) },
     ) {
         Row(
             modifier = Modifier

@@ -21,9 +21,11 @@ enum class SportsScreens(@StringRes val title: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SportsApp(windowSize: WindowWidthSizeClass) {
-    val viewModel: SportViewModel = viewModel()
-    val navController: NavHostController = rememberNavController()
+fun SportsApp(
+    windowSize: WindowWidthSizeClass,
+    viewModel: SportViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
+) {
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = SportsScreens.valueOf(
